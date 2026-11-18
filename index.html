@@ -59,7 +59,8 @@
 
   /* ---------- Startseite ---------- */
   .logo { text-align: center; padding: 4px 0 2px; position: relative; }
-  .logo .sprache-wahl { position: absolute; top: 0; right: 0; }
+  /* z-index, damit die schwebende Kugel die Knöpfe nicht verdeckt */
+  .logo .sprache-wahl { position: absolute; top: 0; right: 0; z-index: 2; }
   .kugel { font-size: 64px; line-height: 1; filter: drop-shadow(0 0 22px rgba(255, 150, 80, .6)); animation: schweben 4s ease-in-out infinite; }
   h1 {
     margin: 8px 0 2px; font-size: 38px; font-weight: 900; letter-spacing: .02em;
