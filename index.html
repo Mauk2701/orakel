@@ -52,8 +52,14 @@
   button { font: inherit; color: inherit; border: 0; cursor: pointer; }
   button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
 
+  /* ---------- Sprachumschalter ---------- */
+  .sprache-wahl { display: inline-flex; gap: 2px; padding: 3px; border-radius: 99px; background: rgba(255, 255, 255, .07); flex: none; }
+  .sprache-wahl button { background: none; color: var(--muted); padding: 6px 11px; border-radius: 99px; font-size: 13px; font-weight: 800; }
+  .sprache-wahl button[aria-pressed="true"] { background: var(--amber); color: var(--auf-amber); }
+
   /* ---------- Startseite ---------- */
-  .logo { text-align: center; padding: 4px 0 2px; }
+  .logo { text-align: center; padding: 4px 0 2px; position: relative; }
+  .logo .sprache-wahl { position: absolute; top: 0; right: 0; }
   .kugel { font-size: 64px; line-height: 1; filter: drop-shadow(0 0 22px rgba(255, 150, 80, .6)); animation: schweben 4s ease-in-out infinite; }
   h1 {
     margin: 8px 0 2px; font-size: 38px; font-weight: 900; letter-spacing: .02em;
@@ -170,7 +176,7 @@
   .antwort { font-size: 24px; font-weight: 900; color: var(--gold); margin-top: 2px; }
   #frageTeil { animation: aufdecken .4s ease-out; }
 
-  .fuss { display: flex; justify-content: space-between; margin-top: 4px; }
+  .fuss { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 4px; }
   .text-knopf { background: none; color: var(--muted); font-size: 14px; padding: 8px 4px; text-decoration: underline; }
 
   /* ---------- Diskussions-Timer ---------- */
@@ -216,62 +222,58 @@
   <!-- ================= Startseite ================= -->
   <section id="startSeite">
     <header class="logo">
+      <div class="sprache-wahl" role="group" aria-label="Sprache / Language">
+        <button type="button" data-sprache="de" aria-label="Deutsch">DE</button>
+        <button type="button" data-sprache="en" aria-label="English">EN</button>
+      </div>
       <div class="kugel" aria-hidden="true">🔮</div>
-      <h1>Orakel</h1>
-      <p class="untertitel">Wer kennt die Frage nicht?</p>
+      <h1 data-t="titel">Orakel</h1>
+      <p class="untertitel" data-t="untertitel"></p>
     </header>
 
     <div class="karte">
-      <label class="feld-titel" for="raumFeld">Raum-Code</label>
+      <label class="feld-titel" for="raumFeld" data-t="raumLabel"></label>
       <div class="reihe">
-        <input id="raumFeld" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="z. B. PIZZA">
-        <button class="zweit wuerfel" id="raumZufall" type="button" aria-label="Zufälligen Code erzeugen">🎲</button>
+        <input id="raumFeld" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" data-t-placeholder="raumPlatzhalter">
+        <button class="zweit wuerfel" id="raumZufall" type="button" data-t-aria="raumZufall">🎲</button>
       </div>
 
-      <div class="feld-titel">Wie viele spielen mit?</div>
+      <div class="feld-titel" data-t="anzahlTitel"></div>
       <div class="zaehler">
-        <button class="zweit rund" id="weniger" type="button" aria-label="Weniger Spieler">−</button>
+        <button class="zweit rund" id="weniger" type="button" data-t-aria="weniger">−</button>
         <span id="anzahl" aria-live="polite">4</span>
-        <button class="zweit rund" id="mehr" type="button" aria-label="Mehr Spieler">+</button>
+        <button class="zweit rund" id="mehr" type="button" data-t-aria="mehr">+</button>
       </div>
 
-      <div class="feld-titel">Welche Nummer bist du?</div>
-      <div class="nummern" id="nummern" role="group" aria-label="Deine Spielernummer"></div>
+      <div class="feld-titel" data-t="nummerTitel"></div>
+      <div class="nummern" id="nummern" role="group" data-t-aria="nummerTitel"></div>
 
-      <button class="haupt breit" id="starten" type="button">Spiel starten</button>
+      <button class="haupt breit" id="starten" type="button" data-t="starten"></button>
       <p class="fehler" id="startFehler" hidden></p>
     </div>
 
     <details class="karte" id="einstellungen">
-      <summary>Einstellungen <span class="zusammenfassung" id="einstZusammenfassung"></span></summary>
+      <summary><span data-t="einstellungen"></span> <span class="zusammenfassung" id="einstZusammenfassung"></span></summary>
 
-      <div class="feld-titel">Themen</div>
-      <div class="themen" id="themen" role="group" aria-label="Themen auswählen"></div>
+      <div class="feld-titel" data-t="themenTitel"></div>
+      <div class="themen" id="themen" role="group" data-t-aria="themenTitel"></div>
 
       <label class="schalter-zeile">
-        <span><b>Themen-Hinweis fürs Orakel</b><small>Das Orakel erfährt, um welches Thema es geht. So wird Bluffen leichter.</small></span>
+        <span><b data-t="hinweisTitel"></b><small data-t="hinweisText"></small></span>
         <input type="checkbox" role="switch" id="hinweisSchalter">
       </label>
 
       <label class="schalter-zeile">
-        <span><b>Zwei Orakel</b><small id="zweiText">Ab 7 Spielern. Die beiden wissen nichts voneinander.</small></span>
+        <span><b data-t="zweiTitel"></b><small id="zweiText"></small></span>
         <input type="checkbox" role="switch" id="zweiSchalter">
       </label>
 
-      <p class="hinweis-box">Alle müssen dieselben Einstellungen wählen. Das Kontrollwort im Spiel prüft das automatisch mit.</p>
+      <p class="hinweis-box" data-t="einstHinweis"></p>
     </details>
 
     <details class="karte regeln">
-      <summary>So wird gespielt</summary>
-      <ol>
-        <li>Alle geben <b>denselben Raum-Code</b>, <b>dieselbe Spielerzahl</b> und dieselben Einstellungen ein. Jeder wählt eine <b>andere Nummer</b>. Setzt euch am besten in der Reihenfolge eurer Nummern hin.</li>
-        <li>Vergleicht das <b>Kontrollwort</b> oben rechts. Steht bei allen dasselbe Wort, seid ihr im selben Spiel.</li>
-        <li><b>Halte deine Karte gedrückt</b>, um sie heimlich zu lesen. Alle bekommen dieselbe Schätzfrage, nur einer nicht: das <b>Orakel</b>. Es kennt nur die Einheit.</li>
-        <li>Reihum sagt jeder laut seine Schätzung. Das Orakel muss bluffen, ohne sich zu verraten.</li>
-        <li>Tippt auf <b>⏱ Diskussion</b>. Nach 60 Sekunden zählt das Handy runter, und bei „Zeigt aufs Orakel!“ zeigen alle gleichzeitig auf das Orakel.</li>
-        <li>Tippt auf <b>Auflösen</b>. Das Orakel hat eine <b>letzte Chance</b>: Es darf laut raten, wie die Frage lautete. Erst dann wird sie gezeigt.</li>
-        <li>Zum Schluss tippen alle auf <b>Nächste Runde</b>.</li>
-      </ol>
+      <summary data-t="regelnTitel"></summary>
+      <ol data-t-html="regeln"></ol>
     </details>
   </section>
 
@@ -283,22 +285,22 @@
         <div class="klein" id="spielerAnzeige"></div>
       </div>
       <div class="kontroll">
-        <div class="klein">Kontrollwort</div>
+        <div class="klein" data-t="kontrollwort"></div>
         <div class="kontroll-wort" id="kontrollwort"></div>
       </div>
     </div>
 
     <div class="runden-leiste">
-      <button class="zweit rund klein-knopf" id="rundeZurueck" aria-label="Eine Runde zurück">‹</button>
+      <button class="zweit rund klein-knopf" id="rundeZurueck" data-t-aria="rundeZurueck">‹</button>
       <span id="rundeAnzeige"></span>
-      <button class="zweit rund klein-knopf" id="rundeVor" aria-label="Eine Runde vor">›</button>
+      <button class="zweit rund klein-knopf" id="rundeVor" data-t-aria="rundeVor">›</button>
     </div>
 
-    <button class="spielkarte" id="spielkarte" type="button" aria-label="Karte gedrückt halten, um sie zu sehen">
+    <button class="spielkarte" id="spielkarte" type="button" data-t-aria="karteAria">
       <span class="verdeckt-inhalt">
         <span class="gross-symbol" aria-hidden="true">🔮</span>
-        Halte die Karte gedrückt
-        <small>Lässt du los, ist sie sofort wieder verdeckt.</small>
+        <span data-t="karteHalten"></span>
+        <small data-t="karteLoslassen"></small>
       </span>
       <span class="offen-inhalt">
         <span class="karte-gross" id="karteText"></span>
@@ -309,28 +311,32 @@
     <p class="beginner" id="beginner"></p>
 
     <div class="karte aufloesung" id="aufloesung" hidden>
-      <div class="klein" id="orakelLabel">Das Orakel war</div>
+      <div class="klein" id="orakelLabel"></div>
       <div class="orakel-name" id="orakelName"></div>
       <div class="letzte-chance" id="letzteChance"></div>
       <div id="frageTeil" hidden>
         <div class="trenner"></div>
-        <div class="klein">Die Frage war</div>
+        <div class="klein" data-t="frageWar"></div>
         <div class="frage" id="aufFrage"></div>
-        <div class="klein">Richtige Antwort</div>
+        <div class="klein" data-t="richtigeAntwort"></div>
         <div class="antwort" id="aufAntwort"></div>
       </div>
     </div>
 
     <div class="knopf-reihe" id="rundenKnoepfe">
-      <button class="zweit" id="diskussion" type="button">⏱ Diskussion</button>
-      <button class="haupt" id="aufloesen" type="button">Auflösen</button>
+      <button class="zweit" id="diskussion" type="button" data-t="diskussion"></button>
+      <button class="haupt" id="aufloesen" type="button"></button>
     </div>
-    <button class="haupt breit" id="frageZeigen" type="button" hidden>Frage zeigen</button>
-    <button class="haupt breit" id="naechste" type="button" hidden>Nächste Runde</button>
+    <button class="haupt breit" id="frageZeigen" type="button" data-t="frageZeigen" hidden></button>
+    <button class="haupt breit" id="naechste" type="button" data-t="naechste" hidden></button>
 
     <div class="fuss">
-      <button class="text-knopf" id="einladen" type="button">Mitspieler einladen</button>
-      <button class="text-knopf" id="verlassen" type="button">Spiel verlassen</button>
+      <button class="text-knopf" id="einladen" type="button" data-t="einladen"></button>
+      <div class="sprache-wahl" role="group" aria-label="Sprache / Language">
+        <button type="button" data-sprache="de" aria-label="Deutsch">DE</button>
+        <button type="button" data-sprache="en" aria-label="English">EN</button>
+      </div>
+      <button class="text-knopf" id="verlassen" type="button" data-t="verlassen"></button>
     </div>
   </section>
 </main>
@@ -341,8 +347,8 @@
     <div class="timer-ring" id="timerRing"><span id="timerZahl" aria-live="off">60</span></div>
     <p class="timer-text" id="timerText" aria-live="assertive"></p>
     <div class="knopf-reihe" id="timerKnoepfe">
-      <button class="zweit" id="timerAbbrechen" type="button">Abbrechen</button>
-      <button class="haupt" id="timerJetzt" type="button">Jetzt zeigen</button>
+      <button class="zweit" id="timerAbbrechen" type="button" data-t="abbrechen"></button>
+      <button class="haupt" id="timerJetzt" type="button" data-t="jetztZeigen"></button>
     </div>
   </div>
 </div>
@@ -355,17 +361,184 @@
 // Orakel: Alle Handys rechnen mit derselben Zufallsformel.
 // Gleicher Raum-Code + gleiche Spielerzahl + gleiche Einstellungen + gleiche Runde
 // = gleiche Frage und gleiches Orakel auf jedem Handy, ganz ohne Server.
+// Die Sprache ist dabei egal: Jeder kann Deutsch oder Englisch wählen.
 // =====================================================================
 
+// ---------- Alle Texte auf Deutsch und Englisch ----------
+const TEXTE = {
+  de: {
+    titel: "Orakel",
+    untertitel: "Wer kennt die Frage nicht?",
+    raumLabel: "Raum-Code",
+    raumPlatzhalter: "z. B. PIZZA",
+    raumZufall: "Zufälligen Code erzeugen",
+    anzahlTitel: "Wie viele spielen mit?",
+    weniger: "Weniger Spieler",
+    mehr: "Mehr Spieler",
+    nummerTitel: "Welche Nummer bist du?",
+    starten: "Spiel starten",
+    startFehler: "Gib zuerst einen Raum-Code ein oder würfle einen mit 🎲.",
+    einstellungen: "Einstellungen",
+    themenTitel: "Themen",
+    hinweisTitel: "Themen-Hinweis fürs Orakel",
+    hinweisText: "Das Orakel erfährt, um welches Thema es geht. So wird Bluffen leichter.",
+    zweiTitel: "Zwei Orakel",
+    zweiErstAb7: "Erst ab 7 Spielern möglich.",
+    zweiWissenNichts: "Die beiden wissen nichts voneinander.",
+    einstHinweis: "Alle müssen dieselben Einstellungen wählen. Das Kontrollwort im Spiel prüft das automatisch mit. Die Sprache darf jeder selbst wählen.",
+    alleThemen: "Alle Themen",
+    anzahlThemen: (w) => `${w.n} ${w.n === 1 ? "Thema" : "Themen"}`,
+    mitHinweis: "Hinweis",
+    zweiOrakelKurz: "2 Orakel",
+    mindestensEinThema: "Mindestens ein Thema muss an bleiben",
+    regelnTitel: "So wird gespielt",
+    regeln: `
+      <li>Alle geben <b>denselben Raum-Code</b>, <b>dieselbe Spielerzahl</b> und dieselben Einstellungen ein. Jeder wählt eine <b>andere Nummer</b>. Setzt euch am besten in der Reihenfolge eurer Nummern hin.</li>
+      <li>Vergleicht das <b>Kontrollwort</b> oben rechts. Steht bei allen dasselbe Wort, seid ihr im selben Spiel.</li>
+      <li><b>Halte deine Karte gedrückt</b>, um sie heimlich zu lesen. Alle bekommen dieselbe Schätzfrage, nur einer nicht: das <b>Orakel</b>. Es kennt nur die Einheit.</li>
+      <li>Reihum sagt jeder laut seine Schätzung. Das Orakel muss bluffen, ohne sich zu verraten.</li>
+      <li>Tippt auf <b>⏱ Diskussion</b>. Nach 60 Sekunden zählt das Handy runter, und bei „Zeigt aufs Orakel!“ zeigen alle gleichzeitig auf das Orakel.</li>
+      <li>Tippt auf <b>Auflösen</b>. Das Orakel hat eine <b>letzte Chance</b>: Es darf laut raten, wie die Frage lautete. Erst dann wird sie gezeigt.</li>
+      <li>Zum Schluss tippen alle auf <b>Nächste Runde</b>.</li>`,
+    kontrollwort: "Kontrollwort",
+    raum: (w) => `Raum ${w.raum}`,
+    spielerVon: (w) => `Du bist Spieler ${w.n} von ${w.m}`,
+    runde: (w) => `Runde ${w.r}`,
+    rundeZurueck: "Eine Runde zurück",
+    rundeVor: "Eine Runde vor",
+    karteAria: "Karte gedrückt halten, um sie zu sehen",
+    karteHalten: "Halte die Karte gedrückt",
+    karteLoslassen: "Lässt du los, ist sie sofort wieder verdeckt.",
+    orakelKarte: (w) => `Liebes Orakel, gib deine Antwort ${w.e} an.`,
+    orakelKarteHinweis: (w) => `Liebes Orakel, es geht um ${w.h}. Gib deine Antwort ${w.e} an.`,
+    orakelTipp: "Du kennst die Frage nicht. Hör gut zu und bluffe!",
+    gibAntwort: (w) => `Gib deine Antwort ${w.e} an.`,
+    duFaengstAn: "Du fängst an, danach geht es reihum.",
+    spielerFaengtAn: (w) => `Spieler ${w.n} fängt an, danach geht es reihum.`,
+    orakelWar: "Das Orakel war",
+    orakelWaren: "Die Orakel waren",
+    du: (w) => `Du (Spieler ${w.n})`,
+    spieler: (w) => `Spieler ${w.n}`,
+    und: " und ",
+    letzteChance: "🎯 Letzte Chance: Das Orakel darf jetzt laut raten, wie die Frage lautete.",
+    letzteChanceZwei: "🎯 Letzte Chance: Die Orakel dürfen jetzt laut raten, wie die Frage lautete.",
+    frageWar: "Die Frage war",
+    richtigeAntwort: "Richtige Antwort",
+    diskussion: "⏱ Diskussion",
+    aufloesen: "Auflösen",
+    sicher: "Sicher? Nochmal tippen",
+    frageZeigen: "Frage zeigen",
+    naechste: "Nächste Runde",
+    einladen: "Mitspieler einladen",
+    verlassen: "Spiel verlassen",
+    abbrechen: "Abbrechen",
+    jetztZeigen: "Jetzt zeigen",
+    diskutiert: "Diskutiert! Wer ist das Orakel?",
+    bereit: "Macht euch bereit …",
+    zeigt: "Zeigt aufs Orakel!",
+    einladungText: (w) => `Spiel mit beim Orakel! Raum ${w.raum}, ${w.n} Spieler. Such dir eine freie Nummer aus.`,
+    linkKopiert: "Link kopiert, schick ihn in eure Gruppe",
+    raumCodeToast: (w) => `Raum-Code: ${w.raum} · ${w.n} Spieler`,
+  },
+  en: {
+    titel: "Oracle",
+    untertitel: "Who doesn't know the question?",
+    raumLabel: "Room code",
+    raumPlatzhalter: "e.g. PIZZA",
+    raumZufall: "Generate a random code",
+    anzahlTitel: "How many players?",
+    weniger: "Fewer players",
+    mehr: "More players",
+    nummerTitel: "Which number are you?",
+    starten: "Start game",
+    startFehler: "Enter a room code first or roll one with 🎲.",
+    einstellungen: "Settings",
+    themenTitel: "Topics",
+    hinweisTitel: "Topic hint for the Oracle",
+    hinweisText: "The Oracle learns which topic the question is about. That makes bluffing easier.",
+    zweiTitel: "Two Oracles",
+    zweiErstAb7: "Only possible with 7 or more players.",
+    zweiWissenNichts: "They don't know about each other.",
+    einstHinweis: "Everyone has to choose the same settings. The check word in the game verifies this automatically. Everyone can pick their own language.",
+    alleThemen: "All topics",
+    anzahlThemen: (w) => `${w.n} ${w.n === 1 ? "topic" : "topics"}`,
+    mitHinweis: "Hint",
+    zweiOrakelKurz: "2 Oracles",
+    mindestensEinThema: "At least one topic has to stay on",
+    regelnTitel: "How to play",
+    regeln: `
+      <li>Everyone enters <b>the same room code</b>, <b>the same number of players</b> and the same settings. Each person picks a <b>different number</b>. It helps to sit in the order of your numbers.</li>
+      <li>Compare the <b>check word</b> in the top right. If everyone sees the same word, you're in the same game.</li>
+      <li><b>Press and hold your card</b> to read it secretly. Everyone gets the same estimation question except one person: the <b>Oracle</b>. The Oracle only knows the unit.</li>
+      <li>Take turns saying your estimate out loud. The Oracle has to bluff without giving themselves away.</li>
+      <li>Tap <b>⏱ Discussion</b>. After 60 seconds the phone counts down, and at “Point at the Oracle!” everyone points at the Oracle at the same time.</li>
+      <li>Tap <b>Reveal</b>. The Oracle gets a <b>last chance</b>: they may guess out loud what the question was. Only then is it shown.</li>
+      <li>Finally, everyone taps <b>Next round</b>.</li>`,
+    kontrollwort: "Check word",
+    raum: (w) => `Room ${w.raum}`,
+    spielerVon: (w) => `You are player ${w.n} of ${w.m}`,
+    runde: (w) => `Round ${w.r}`,
+    rundeZurueck: "Go back one round",
+    rundeVor: "Go forward one round",
+    karteAria: "Press and hold to see your card",
+    karteHalten: "Press and hold the card",
+    karteLoslassen: "Let go and it's hidden again right away.",
+    orakelKarte: (w) => `Dear Oracle, give your answer ${w.e}.`,
+    orakelKarteHinweis: (w) => `Dear Oracle, it's about ${w.h}. Give your answer ${w.e}.`,
+    orakelTipp: "You don't know the question. Listen closely and bluff!",
+    gibAntwort: (w) => `Give your answer ${w.e}.`,
+    duFaengstAn: "You go first, then take turns around the group.",
+    spielerFaengtAn: (w) => `Player ${w.n} goes first, then take turns around the group.`,
+    orakelWar: "The Oracle was",
+    orakelWaren: "The Oracles were",
+    du: (w) => `You (player ${w.n})`,
+    spieler: (w) => `Player ${w.n}`,
+    und: " and ",
+    letzteChance: "🎯 Last chance: The Oracle may now guess out loud what the question was.",
+    letzteChanceZwei: "🎯 Last chance: The Oracles may now guess out loud what the question was.",
+    frageWar: "The question was",
+    richtigeAntwort: "Correct answer",
+    diskussion: "⏱ Discussion",
+    aufloesen: "Reveal",
+    sicher: "Sure? Tap again",
+    frageZeigen: "Show question",
+    naechste: "Next round",
+    einladen: "Invite players",
+    verlassen: "Leave game",
+    abbrechen: "Cancel",
+    jetztZeigen: "Point now",
+    diskutiert: "Discuss! Who is the Oracle?",
+    bereit: "Get ready …",
+    zeigt: "Point at the Oracle!",
+    einladungText: (w) => `Play Orakel with us! Room ${w.raum}, ${w.n} players. Pick a free number.`,
+    linkKopiert: "Link copied, send it to your group",
+    raumCodeToast: (w) => `Room code: ${w.raum} · ${w.n} players`,
+  },
+};
+
+function t(schluessel, werte = {}) {
+  const text = (TEXTE[stand.sprache] || TEXTE.de)[schluessel] ?? TEXTE.de[schluessel] ?? schluessel;
+  return typeof text === "function" ? text(werte) : text;
+}
+
+// Frage in der gewählten Sprache
+function frageIn(q) {
+  return stand.sprache === "en" && q.en ? { f: q.en[0], e: q.en[1], a: q.en[2] } : { f: q.f, e: q.e, a: q.a };
+}
+const themaName = (id) => (stand.sprache === "en" ? THEMEN[id].en : THEMEN[id].name);
+const themaHinweis = (id) => (stand.sprache === "en" ? THEMEN[id].hinweisEn : THEMEN[id].hinweis);
+
+// ---------- Grundeinstellungen ----------
 const SPEICHER = "orakel-v1";
 const DISKUSSION_SEKUNDEN = 60;
 const THEMEN_IDS = Object.keys(THEMEN);
+// Kontrollwörter, die auf Deutsch und Englisch gleich sind, damit gemischte Gruppen vergleichen können
 const WOERTER = [
-  "TIGER", "WOLKE", "ANKER", "KOMET", "PALME", "LAMPE", "DRACHE", "FALKE", "GITARRE", "HONIG",
-  "INSEL", "KAKTUS", "LÖWE", "MANGO", "NEBEL", "PIRAT", "RAKETE", "SONNE", "TROMMEL", "VULKAN",
-  "WALROSS", "ZEBRA", "BLITZ", "DELFIN", "EULE", "FEDER", "GLOCKE", "IGEL", "KRONE", "LIBELLE",
-  "MOND", "NASHORN", "PINGUIN", "RUBIN", "SCHATZ", "TULPE", "ZITRONE", "BANANE", "KIWI", "PANDA",
-  "ROBOTER", "TORNADO", "KOBOLD", "FLAMINGO", "KRAKE", "MUSCHEL", "PIZZA", "TACO", "BREZEL", "WAFFEL",
+  "TIGER", "PANDA", "PIZZA", "TACO", "KIWI", "MANGO", "ZEBRA", "KOALA", "GORILLA", "FLAMINGO",
+  "JAGUAR", "HAMSTER", "PONY", "TORNADO", "OPAL", "MOTOR", "TURBO", "NINJA", "PIXEL", "SAMBA",
+  "TANGO", "POLKA", "LIMBO", "BINGO", "DOMINO", "COWBOY", "CELLO", "BANJO", "PIANO", "SAFARI",
+  "HOTEL", "TAXI", "SOFA", "RADIO", "VIDEO", "ALBUM", "SNACK", "TOAST", "MUFFIN", "PUDDING",
+  "POPCORN", "KETCHUP", "ESPRESSO", "MOJITO", "NACHO", "BURRITO", "PAPRIKA", "CHILI", "PAPAYA", "DISCO",
 ];
 
 const $ = (s) => document.querySelector(s);
@@ -397,7 +570,7 @@ function zufallsfolge(seed) {
 
 // ---------- Einstellungen ----------
 function aktiveThemen() {
-  const gewaehlt = (stand.themen || []).filter((t) => THEMEN_IDS.includes(t));
+  const gewaehlt = (stand.themen || []).filter((x) => THEMEN_IDS.includes(x));
   return gewaehlt.length ? gewaehlt : THEMEN_IDS;
 }
 function themenSchluessel() {
@@ -448,12 +621,14 @@ function laden() {
   const leer = {
     raum: "", anzahl: 4, nummer: 1, runde: 1, aufgedeckt: 0, imSpiel: false,
     themen: [...THEMEN_IDS], hinweis: false, zweiOrakel: false,
+    sprache: (navigator.language || "de").toLowerCase().startsWith("de") ? "de" : "en",
   };
   try {
     const s = JSON.parse(localStorage.getItem(SPEICHER));
     if (s) {
       const zusammen = Object.assign(leer, s);
       if (typeof zusammen.aufgedeckt === "boolean") zusammen.aufgedeckt = zusammen.aufgedeckt ? 2 : 0;
+      if (zusammen.sprache !== "de" && zusammen.sprache !== "en") zusammen.sprache = leer.sprache;
       return zusammen;
     }
   } catch (e) {}
@@ -478,10 +653,11 @@ let linkRunde = null;
   if (n >= 3 && n <= 12) stand.anzahl = n;
   const r = parseInt(p.get("runde"), 10);
   linkRunde = r >= 1 ? r : 1;
-  const themen = (p.get("themen") || "").split(",").filter((t) => THEMEN_IDS.includes(t));
+  const themen = (p.get("themen") || "").split(",").filter((x) => THEMEN_IDS.includes(x));
   stand.themen = themen.length ? themen : [...THEMEN_IDS];
   stand.hinweis = p.get("hinweis") === "1";
   stand.zweiOrakel = p.get("zwei") === "1";
+  if (p.get("lang") === "de" || p.get("lang") === "en") stand.sprache = p.get("lang");
 
   const nr = parseInt(p.get("nummer"), 10);
   if (nr >= 1 && nr <= stand.anzahl) {
@@ -499,6 +675,17 @@ let linkRunde = null;
 })();
 
 // ---------- Anzeige ----------
+function texteAnwenden() {
+  document.documentElement.lang = stand.sprache;
+  document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t(el.dataset.t); });
+  document.querySelectorAll("[data-t-html]").forEach((el) => { el.innerHTML = t(el.dataset.tHtml); });
+  document.querySelectorAll("[data-t-aria]").forEach((el) => el.setAttribute("aria-label", t(el.dataset.tAria)));
+  document.querySelectorAll("[data-t-placeholder]").forEach((el) => { el.placeholder = t(el.dataset.tPlaceholder); });
+  document.querySelectorAll("[data-thema]").forEach((b) => { b.textContent = `${THEMEN[b.dataset.thema].emoji} ${themaName(b.dataset.thema)}`; });
+  document.querySelectorAll("[data-sprache]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.sprache === stand.sprache));
+  aufloesenZuruecksetzen();
+}
+
 function zeichnen() {
   $("#startSeite").hidden = stand.imSpiel;
   $("#spielSeite").hidden = !stand.imSpiel;
@@ -518,7 +705,7 @@ function startZeichnen() {
     b.type = "button";
     b.textContent = i;
     b.setAttribute("aria-pressed", i === stand.nummer);
-    b.setAttribute("aria-label", "Spieler " + i);
+    b.setAttribute("aria-label", t("spieler", { n: i }));
     b.onclick = () => { stand.nummer = i; speichern(); startZeichnen(); };
     box.appendChild(b);
   }
@@ -529,41 +716,40 @@ function startZeichnen() {
   $("#hinweisSchalter").checked = stand.hinweis;
   $("#zweiSchalter").checked = zweiAktiv();
   $("#zweiSchalter").disabled = stand.anzahl < 7;
-  $("#zweiText").textContent = stand.anzahl < 7
-    ? "Erst ab 7 Spielern möglich."
-    : "Die beiden wissen nichts voneinander.";
+  $("#zweiText").textContent = stand.anzahl < 7 ? t("zweiErstAb7") : t("zweiWissenNichts");
 
-  const teile = [aktiv.length === THEMEN_IDS.length ? "Alle Themen" : `${aktiv.length} ${aktiv.length === 1 ? "Thema" : "Themen"}`];
-  if (stand.hinweis) teile.push("Hinweis");
-  if (zweiAktiv()) teile.push("2 Orakel");
+  const teile = [aktiv.length === THEMEN_IDS.length ? t("alleThemen") : t("anzahlThemen", { n: aktiv.length })];
+  if (stand.hinweis) teile.push(t("mitHinweis"));
+  if (zweiAktiv()) teile.push(t("zweiOrakelKurz"));
   $("#einstZusammenfassung").textContent = teile.join(" · ");
 }
 
 function spielZeichnen() {
   const d = rundeDaten();
+  const frage = frageIn(d.frage);
   const binOrakel = d.orakel.includes(stand.nummer);
 
-  $("#raumAnzeige").textContent = "Raum " + stand.raum;
-  $("#spielerAnzeige").textContent = `Du bist Spieler ${stand.nummer} von ${stand.anzahl}`;
+  $("#raumAnzeige").textContent = t("raum", { raum: stand.raum });
+  $("#spielerAnzeige").textContent = t("spielerVon", { n: stand.nummer, m: stand.anzahl });
   $("#kontrollwort").textContent = d.wort;
-  $("#rundeAnzeige").textContent = "Runde " + stand.runde;
+  $("#rundeAnzeige").textContent = t("runde", { r: stand.runde });
   $("#rundeZurueck").disabled = stand.runde <= 1;
 
   // Die Karte sieht für alle gleich aus, nur der Text ist anders
   if (binOrakel) {
     $("#karteText").textContent = stand.hinweis
-      ? `Liebes Orakel, es geht um ${THEMEN[d.frage.t].hinweis}. Gib deine Antwort ${d.frage.e} an.`
-      : `Liebes Orakel, gib deine Antwort ${d.frage.e} an.`;
-    $("#karteHinweis").textContent = "Du kennst die Frage nicht. Hör gut zu und bluffe!";
+      ? t("orakelKarteHinweis", { h: themaHinweis(d.frage.t), e: frage.e })
+      : t("orakelKarte", { e: frage.e });
+    $("#karteHinweis").textContent = t("orakelTipp");
   } else {
-    $("#karteText").textContent = d.frage.f;
-    $("#karteHinweis").textContent = `Gib deine Antwort ${d.frage.e} an.`;
+    $("#karteText").textContent = frage.f;
+    $("#karteHinweis").textContent = t("gibAntwort", { e: frage.e });
   }
   $("#spielkarte").classList.toggle("offen", karteOffen);
 
   $("#beginner").textContent = d.beginner === stand.nummer
-    ? "Du fängst an, danach geht es reihum."
-    : `Spieler ${d.beginner} fängt an, danach geht es reihum.`;
+    ? t("duFaengstAn")
+    : t("spielerFaengtAn", { n: d.beginner });
 
   // Auflösung in zwei Schritten: erst das Orakel, dann die Frage
   const stufe = stand.aufgedeckt;
@@ -574,24 +760,22 @@ function spielZeichnen() {
   $("#frageTeil").hidden = stufe !== 2;
   if (stufe > 0) {
     const zwei = d.orakel.length === 2;
-    $("#orakelLabel").textContent = zwei ? "Die Orakel waren" : "Das Orakel war";
+    $("#orakelLabel").textContent = zwei ? t("orakelWaren") : t("orakelWar");
     $("#orakelName").textContent = d.orakel
-      .map((n) => (n === stand.nummer ? `Du (Spieler ${n})` : `Spieler ${n}`))
-      .join(" und ");
-    $("#letzteChance").textContent = zwei
-      ? "🎯 Letzte Chance: Die Orakel dürfen jetzt laut raten, wie die Frage lautete."
-      : "🎯 Letzte Chance: Das Orakel darf jetzt laut raten, wie die Frage lautete.";
-    $("#aufFrage").textContent = d.frage.f;
-    $("#aufAntwort").textContent = d.frage.a;
+      .map((n) => (n === stand.nummer ? t("du", { n }) : t("spieler", { n })))
+      .join(t("und"));
+    $("#letzteChance").textContent = zwei ? t("letzteChanceZwei") : t("letzteChance");
+    $("#aufFrage").textContent = frage.f;
+    $("#aufAntwort").textContent = frage.a;
   }
 }
 
 function toast(text) {
-  const t = $("#toast");
-  t.textContent = text;
-  t.hidden = false;
+  const el = $("#toast");
+  el.textContent = text;
+  el.hidden = false;
   clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => { t.hidden = true; }, 2200);
+  toast.timer = setTimeout(() => { el.hidden = true; }, 2200);
 }
 
 function rundeWechseln(neu) {
@@ -605,16 +789,25 @@ function rundeWechseln(neu) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+// ---------- Sprache umschalten ----------
+document.querySelectorAll("[data-sprache]").forEach((b) => {
+  b.onclick = () => {
+    stand.sprache = b.dataset.sprache;
+    speichern();
+    texteAnwenden();
+    zeichnen();
+  };
+});
+
 // ---------- Startseite: Knöpfe ----------
-for (const [id, t] of Object.entries(THEMEN)) {
+for (const id of THEMEN_IDS) {
   const b = document.createElement("button");
   b.type = "button";
   b.dataset.thema = id;
-  b.textContent = `${t.emoji} ${t.name}`;
   b.onclick = () => {
     let aktiv = aktiveThemen();
     if (aktiv.includes(id)) {
-      if (aktiv.length === 1) { toast("Mindestens ein Thema muss an bleiben"); return; }
+      if (aktiv.length === 1) { toast(t("mindestensEinThema")); return; }
       aktiv = aktiv.filter((x) => x !== id);
     } else {
       aktiv = [...aktiv, id];
@@ -659,7 +852,7 @@ $("#starten").onclick = () => {
   stand.raum = raumBereinigen($("#raumFeld").value);
   if (!stand.raum) {
     const f = $("#startFehler");
-    f.textContent = "Gib zuerst einen Raum-Code ein oder würfle einen mit 🎲.";
+    f.textContent = t("startFehler");
     f.hidden = false;
     const feld = $("#raumFeld");
     feld.classList.remove("wackeln"); void feld.offsetWidth; feld.classList.add("wackeln");
@@ -705,14 +898,14 @@ function aufloesenZuruecksetzen() {
   clearTimeout(sicherTimer);
   const b = $("#aufloesen");
   b.classList.remove("sicher");
-  b.textContent = "Auflösen";
+  b.textContent = t("aufloesen");
 }
 $("#aufloesen").onclick = () => {
   const b = $("#aufloesen");
   if (!b.classList.contains("sicher")) {
     // Erst beim zweiten Tippen auflösen, damit niemand aus Versehen spickt
     b.classList.add("sicher");
-    b.textContent = "Sicher? Nochmal tippen";
+    b.textContent = t("sicher");
     clearTimeout(sicherTimer);
     sicherTimer = setTimeout(aufloesenZuruecksetzen, 3000);
     return;
@@ -766,7 +959,7 @@ function timerStarten() {
   $("#timer").hidden = false;
   $("#timer").classList.remove("finale");
   $("#timerKnoepfe").hidden = false;
-  $("#timerText").textContent = "Diskutiert! Wer ist das Orakel?";
+  $("#timerText").textContent = t("diskutiert");
   clearInterval(timerIntervall);
   timerTick();
   timerIntervall = setInterval(timerTick, 200);
@@ -790,13 +983,13 @@ function countdown() {
   $("#timerKnoepfe").hidden = true;
   $("#timerRing").classList.remove("knapp");
   $("#timerRing").style.setProperty("--p", 1);
-  $("#timerText").textContent = "Macht euch bereit …";
+  $("#timerText").textContent = t("bereit");
   ["3", "2", "1"].forEach((z, i) => {
     countdownSchritte.push(setTimeout(() => { zahlZeigen(z); ton(660); vibrieren(120); }, i * 900));
   });
   countdownSchritte.push(setTimeout(() => {
     zahlZeigen("👉");
-    $("#timerText").textContent = "Zeigt aufs Orakel!";
+    $("#timerText").textContent = t("zeigt");
     $("#timer").classList.add("finale");
     ton(990, 0.5);
     vibrieren([200, 100, 300]);
@@ -842,20 +1035,21 @@ $("#einladen").onclick = async () => {
   if (schluessel !== "alle") url += `&themen=${schluessel}`;
   if (stand.hinweis) url += "&hinweis=1";
   if (zweiAktiv()) url += "&zwei=1";
-  const text = `Spiel mit beim Orakel! Raum ${stand.raum}, ${stand.anzahl} Spieler. Such dir eine freie Nummer aus.`;
+  const text = t("einladungText", { raum: stand.raum, n: stand.anzahl });
   if (navigator.share) {
     try { await navigator.share({ title: "Orakel", text, url }); } catch (e) {}
     return;
   }
   try {
     await navigator.clipboard.writeText(url);
-    toast("Link kopiert, schick ihn in eure Gruppe");
+    toast(t("linkKopiert"));
   } catch (e) {
-    toast(`Raum-Code: ${stand.raum} · ${stand.anzahl} Spieler`);
+    toast(t("raumCodeToast", { raum: stand.raum, n: stand.anzahl }));
   }
 };
 
 // ---------- Start ----------
+texteAnwenden();
 zeichnen();
 
 if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {

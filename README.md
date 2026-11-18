@@ -11,5 +11,6 @@ Alle bekommen dieselbe Schätzfrage, nur einer nicht: das Orakel. Es kennt nur d
 - Diskussions-Timer mit „3, 2, 1, zeigt aufs Orakel!“
 - Letzte Chance: Das enttarnte Orakel darf die Frage raten, bevor sie gezeigt wird
 - Einstellungen: Themen wählen, Themen-Hinweis fürs Orakel, zwei Orakel ab 7 Spielern
+- Deutsch und Englisch: Jeder wählt seine Sprache selbst, auch in derselben Runde
 
 Gebaut mit HTML, CSS und JavaScript, zusammen mit Claude.
