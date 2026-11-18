@@ -22,9 +22,13 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
   // Beim Server immer nachfragen, ob es eine neuere Version gibt (statt alte Kopien aus dem Browser zu nehmen)
-  const anfrage = e.request.mode === "navigate" ? e.request : new Request(e.request, { cache: "no-cache" });
+  // Das gilt auch für die Hauptseite selbst, sonst sieht man nach einem Update bis zu 10 Minuten die alte Version
+  const neu = e.request.mode === "navigate"
+    ? fetch(e.request.url, { cache: "no-cache", credentials: "same-origin" })
+        .then((antwort) => (antwort.redirected ? fetch(e.request) : antwort))
+    : fetch(new Request(e.request, { cache: "no-cache" }));
   e.respondWith(
-    fetch(anfrage)
+    neu
       .then((antwort) => {
         const kopie = antwort.clone();
         caches.open(CACHE).then((c) => c.put(e.request, kopie));
